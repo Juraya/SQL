@@ -207,6 +207,11 @@ HAVING MAX(p.note) IN (
 	GROUP BY p.codeUV);	
 
 // R18
+SELECT nomcomposante, nomuv, AVG(note)
+FROM uv u1
+JOIN passer p1 on u1.codeuv = p1.codeUV
+GROUP BY u1.codeuv, nomuv, nomcomposante
+HAVING AVG(note) <= (SELECT MIN(AVG(note)) FROM passer p2 JOIN uv u2 on p2.codeuv = u2.codeuv WHERE u2.nomcomposante = u1.nomcomposante GROUP BY p2.codeuv);
 
 // R20
 SELECT e.nometudiant, e.prenometudiant
@@ -345,7 +350,17 @@ WHERE NOT EXISTS (  SELECT codeuv FROM passer p WHERE numetudiant = 'E3'
                     SELECT codeuv FROM passer p WHERE p.numetudiant = e.numetudiant );
 					
 // R62
+WITH M(nomcomposante, nomuv, moyenne)
+AS (
+SELECT nomcomposante, nomuv, AVG(note)
+FROM uv u1
+JOIN passer p1 on u1.codeuv = p1.codeUV
+GROUP BY u1.codeuv, nomuv, nomcomposante
+)
 
+SELECT m2.nomcomposante, m2.nomuv, m2.moyenne
+FROM M m1 FULL OUTER JOIN M m2 on m1.nomcomposante = m2.nomcomposante
+WHERE m1.moyenne = ( SELECT MIN(m2.moyenne) FROM M m2 );
 
 
 
