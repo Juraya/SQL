@@ -362,6 +362,17 @@ SELECT m2.nomcomposante, m2.nomuv, m2.moyenne
 FROM M m1 FULL OUTER JOIN M m2 on m1.nomcomposante = m2.nomcomposante
 WHERE m1.moyenne = ( SELECT MIN(m2.moyenne) FROM M m2 );
 
+// R63
+SELECT *
+FROM ( SELECT * FROM passer ORDER BY note DESC )
+WHERE rownum <= 3;
+
+// R64
+WITH R( numetudiant, codeuv, note, rang)
+AS ( SELECT numetudiant, codeuv, note, RANK() OVER(ORDER BY note DESC) as Rang FROM passer )
+
+SELECT * FROM R
+WHERE rang <= 6;
 
 
 
