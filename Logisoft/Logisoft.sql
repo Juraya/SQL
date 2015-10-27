@@ -5,3 +5,56 @@ WHERE d.referencediplome = p.referencediplome
 GROUP BY d.referencediplome;
 
 // R02
+WITH P(nom, nbSalarie)
+AS(SELECT p.nomprojet, COUNT(ea.numsalarie) as nb
+FROM etreaffecte ea, projets p
+WHERE p.codeprojet = ea.codeprojet
+GROUP BY p.nomprojet )
+
+SELECT * FROM P
+WHERE nbSalarie = (SELECT MAX(nbSalarie) FROM P);
+
+// R03
+SELECT DISTINCT p.nomprojet, COUNT(s.salairesalarie) 
+  FROM projets p, etreaffecte ea, salaries s
+  WHERE s.numsalarie = ea.numsalarie
+  AND ea.codeprojet = p.codeprojet
+  AND s.salairesalarie >= 2500
+  GROUP BY p.nomprojet
+  
+INTERSECT
+
+SELECT DISTINCT p.nomprojet, COUNT(s.salairesalarie) 
+  FROM projets p, etreaffecte ea, salaries s
+  WHERE s.numsalarie = ea.numsalarie
+  AND ea.codeprojet = p.codeprojet
+  GROUP BY p.nomprojet;
+  
+// R04
+SELECT s.nomsalarie, s.prenomsalarie
+FROM salaries s, posseder p, diplomes d
+WHERE d.nomdiplome = 'Licence pro'
+AND s.numsalarie NOT IN (SELECT numsalarie FROM etreaffecte)
+GROUP BY s.nomsalarie, s.prenomsalarie;
+
+// R05
+SELECT nomsalarie, prenomsalarie
+FROM salaries
+START WITH nomsalarie = 'Stické' AND prenomsalarie = 'Sophie'
+CONNECT BY PRIOR numsalariechef = numsalarie;
+
+// R06
+
+
+
+
+
+
+
+
+
+
+
+
+
+
