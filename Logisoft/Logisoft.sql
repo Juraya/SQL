@@ -137,4 +137,4 @@ SELECT s.numsalarie, s.nomsalarie, s.prenomsalarie
 FROM salaries s, posseder p, diplomes d
 WHERE p.numsalarie = s.numsalarie
 AND d.referencediplome = p.referencediplome
-AND d.referencediplome NOT IN (SELECT diplome FROM D);
+AND d.nomdiplome NOT IN (SELECT diplome FROM D);
