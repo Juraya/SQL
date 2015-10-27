@@ -373,36 +373,3 @@ AS ( SELECT numetudiant, codeuv, note, RANK() OVER(ORDER BY note DESC) as Rang F
 
 SELECT * FROM R
 WHERE rang <= 6;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -57,6 +57,24 @@ SELECT numsalarie, nb FROM (
 WHERE nb = ( SELECT COUNT(codeprojet) FROM projets p, clients cl WHERE cl.numclient = p.numclient AND cl.categorieclient = 'Gros' );
 
 // R07
+WITH D(diplome)
+AS (  SELECT d.nomdiplome
+      FROM salaries s, posseder p, diplomes d
+      WHERE s.nomsalarie = 'Bono'
+      AND s.numsalarie = p.numsalarie
+      AND d.referencediplome = p.referencediplome
+      AND s.prenomsalarie = 'Jean' )
+
+SELECT s.numsalarie, s.nomsalarie, s.prenomsalarie
+FROM salaries s
+WHERE NOT EXISTS (    SELECT * FROM diplomes d
+                      WHERE d.nomdiplome IN (SELECT diplome FROM D)
+                      AND NOT EXISTS (    SELECT * FROM posseder p 
+                                          WHERE s.numsalarie = p.numsalarie
+                                          AND d.referencediplome = p.referencediplome
+                                           ) );
+										   
+// R08
 
 
 
