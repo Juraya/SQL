@@ -75,7 +75,41 @@ WHERE NOT EXISTS (    SELECT * FROM diplomes d
                                            ) );
 										   
 // R08
+// A finir, cela ne renvoie que le maximum absolu
+WITH P(nom, categorie, nbprojets)
+AS (
+SELECT cl.nomclient, cl.categorieclient, COUNT(p.numclient) as nb
+FROM clients cl, projets p
+WHERE cl.numclient = p.numclient
+GROUP BY cl.nomclient, cl.categorieclient
+)
 
+SELECT cl.categorieclient, cl.nomclient, P.nbprojets
+FROM clients cl, P, projets p
+WHERE cl.categorieclient = P.categorie
+AND p.numclient = cl.numclient
+GROUP BY cl.categorieclient, cl.nomclient, P.nbprojets
+HAVING COUNT(p.numclient) = MAX(P.nbprojets);
+
+// R09
+SELECT cl.numclient, cl.nomclient, cl.prenomclient, COUNT( p.numclient )
+FROM clients cl LEFT JOIN projets p ON p.numclient = cl.numclient AND p.budgetprojet >= 50000
+GROUP BY cl.numclient, cl.nomclient, cl.prenomclient
+ORDER BY cl.numclient;
+
+// R10
+WITH POS(num)
+AS (SELECT p.numsalarie FROM posseder p GROUP BY p.numsalarie HAVING COUNT(p.numsalarie) >= 2 )
+
+SELECT p.nomprojet
+FROM projets p, etreaffecte ea, salaries s, posseder po
+WHERE p.codeprojet = ea.codeprojet
+AND s.numsalarie = ea.numsalarie
+AND po.numsalarie = s.numsalarie
+AND s.numsalarie NOT IN (SELECT num FROM POS)
+GROUP BY p.nomprojet;
+
+// R11
 
 
 
