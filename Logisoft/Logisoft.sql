@@ -44,7 +44,19 @@ START WITH nomsalarie = 'Stické' AND prenomsalarie = 'Sophie'
 CONNECT BY PRIOR numsalariechef = numsalarie;
 
 // R06
+SELECT numsalarie, nb FROM (
 
+  SELECT s.numsalarie, COUNT(p.codeprojet) as nb
+  FROM salaries s, etreaffecte ea, clients cl, projets p
+  WHERE s.numsalarie = ea.numsalarie
+  AND cl.numclient = p.numclient
+  AND ea.codeprojet = p.codeprojet
+  AND cl.categorieclient = 'Gros'
+  GROUP BY s.numsalarie )
+
+WHERE nb = ( SELECT COUNT(codeprojet) FROM projets p, clients cl WHERE cl.numclient = p.numclient AND cl.categorieclient = 'Gros' );
+
+// R07
 
 
 
